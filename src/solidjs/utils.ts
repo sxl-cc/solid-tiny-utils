@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
+/** biome-ignore-all lint/suspicious/noExplicitAny: any */
 import type { JSX } from "solid-js";
 import type { MaybeAccessor } from "~/types/maybe";
 import { isArray, isFn } from "~/utils";

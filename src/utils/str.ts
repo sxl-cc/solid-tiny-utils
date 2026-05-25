@@ -9,7 +9,7 @@ export const capitalize = (str: string): string => {
     return "";
   }
   const lower = str.toLowerCase();
-  return lower.substring(0, 1).toUpperCase() + lower.substring(1, lower.length);
+  return lower.slice(0, 1).toUpperCase() + lower.slice(1, lower.length);
 };
 
 const splitRegexp = /(?=[A-Z])|[.\-\s_]/;
@@ -32,9 +32,9 @@ export const camel = (str: string): string => {
   if (parts.length === 1) {
     return parts[0];
   }
-  return parts.reduce((acc, part) => {
-    return `${acc}${part.charAt(0).toUpperCase()}${part.slice(1)}`;
-  });
+  return parts.reduce(
+    (acc, part) => `${acc}${part.charAt(0).toUpperCase()}${part.slice(1)}`
+  );
 };
 
 const splitOnNumberRegexp = /([A-Za-z]{1}[0-9]{1})/;
@@ -64,9 +64,7 @@ export const snake = (
   if (parts.length === 1) {
     return parts[0];
   }
-  const result = parts.reduce((acc, part) => {
-    return `${acc}_${part.toLowerCase()}`;
-  });
+  const result = parts.reduce((acc, part) => `${acc}_${part.toLowerCase()}`);
   return options?.splitOnNumber === false
     ? result
     : result.replace(splitOnNumberRegexp, (val) => `${val[0]}_${val[1]}`);
@@ -91,9 +89,7 @@ export const dash = (str: string): string => {
   if (parts.length === 1) {
     return parts[0];
   }
-  return parts.reduce((acc, part) => {
-    return `${acc}-${part.toLowerCase()}`;
-  });
+  return parts.reduce((acc, part) => `${acc}-${part.toLowerCase()}`);
 };
 
 const pascalSplitRegexp = /[.\-\s_]/;
@@ -143,11 +139,11 @@ export const template = (
   // biome-ignore lint/suspicious/noExplicitAny: any
   data: Record<string, any>,
   regex = /\{\{(.+?)\}\}/g
-) => {
-  return Array.from(str.matchAll(regex)).reduce((acc, match) => {
-    return acc.replace(match[0], data[match[1]]);
-  }, str);
-};
+) =>
+  Array.from(str.matchAll(regex)).reduce(
+    (acc, match) => acc.replace(match[0], data[match[1]]),
+    str
+  );
 
 /**
  * Trims all prefix and suffix characters from the given

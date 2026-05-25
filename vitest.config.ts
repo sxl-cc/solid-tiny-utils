@@ -12,7 +12,7 @@ export default defineConfig({
   resolve: {
     conditions: ["development", "browser"],
     alias: {
-      "~": resolve(__dirname, "./src"),
+      "~": resolve(import.meta.dirname, "./src"),
     },
   },
   esbuild: {

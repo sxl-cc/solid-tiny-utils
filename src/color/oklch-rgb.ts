@@ -1,15 +1,15 @@
 import { clamp, max } from "~/utils";
 
 export interface RGB {
-  r: number;
-  g: number;
   b: number;
+  g: number;
+  r: number;
 }
 
 export interface OKLCH {
-  l: number;
   c: number;
   h: number;
+  l: number;
 }
 
 // Optimized constants for better precision

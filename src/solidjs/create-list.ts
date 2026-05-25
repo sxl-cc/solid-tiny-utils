@@ -95,9 +95,8 @@ export function createList<T>(initialValue?: T[]) {
       swap: createSwapHelper<T>(setList),
       move: createMoveHelper<T>(setList),
       sort: createSortHelper<T>(setList),
-      isSortedBy: (compareFn: (a: T, b: T) => number) => {
-        return createIsSortedHelper<T>(list, compareFn);
-      },
+      isSortedBy: (compareFn: (a: T, b: T) => number) =>
+        createIsSortedHelper<T>(list, compareFn),
     },
   ] as const;
 }

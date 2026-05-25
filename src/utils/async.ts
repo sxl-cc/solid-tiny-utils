@@ -1,14 +1,12 @@
 /**
  * Async wait
  */
-export const sleep = (milliseconds: number) => {
-  return new Promise((res) => setTimeout(res, milliseconds));
-};
+export const sleep = (milliseconds: number) =>
+  new Promise((res) => setTimeout(res, milliseconds));
 
-export const runAtNextAnimationFrame = (cb: () => void) => {
-  return requestAnimationFrame(() => {
+export const runAtNextAnimationFrame = (cb: () => void) =>
+  requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       cb();
     });
   });
-};

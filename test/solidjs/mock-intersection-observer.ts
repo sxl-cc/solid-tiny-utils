@@ -32,6 +32,7 @@ export class MockedIntersectionObserver {
   elements: HTMLElement[] = [];
   readonly root = document;
   readonly rootMargin = "0";
+  readonly scrollMargin = "0";
   readonly thresholds = [0];
   constructor(
     callback: IntersectionObserverCallback,

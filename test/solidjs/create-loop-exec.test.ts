@@ -185,9 +185,9 @@ describe("createLoopExec", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const [loop, dispose] = createRoot((d) => {
-      return [createLoopExec(mockFn, delay), d] as const;
-    });
+    const [loop, dispose] = createRoot(
+      (d) => [createLoopExec(mockFn, delay), d] as const
+    );
 
     await vi.advanceTimersByTimeAsync(delay);
     expect(mockFn).toHaveBeenCalledTimes(2);

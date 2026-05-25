@@ -71,9 +71,7 @@ export const list = <T = number>(
   end?: number,
   valueOrMapper?: T | ((i: number) => T),
   step?: number
-): T[] => {
-  return Array.from(range(startOrLength, end, valueOrMapper, step));
-};
+): T[] => Array.from(range(startOrLength, end, valueOrMapper, step));
 
 /**
  * set arr.length to 0

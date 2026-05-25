@@ -16,9 +16,7 @@ describe("createThrottle", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockFn, delay));
 
     // Call the throttled function
     throttledFn("test");
@@ -40,9 +38,7 @@ describe("createThrottle", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockFn, delay));
 
     // First call
     throttledFn("first");
@@ -88,9 +84,7 @@ describe("createThrottle", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockFn, delay));
 
     throttledFn("arg1", "arg2", "arg3");
     await vi.advanceTimersByTimeAsync(delay);
@@ -103,9 +97,7 @@ describe("createThrottle", () => {
     const mockFn = vi.fn();
     const delay = 0;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockFn, delay));
 
     throttledFn("test");
 
@@ -142,9 +134,7 @@ describe("createThrottle", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockFn, delay));
 
     // Make multiple rapid calls
     throttledFn("call1");
@@ -167,9 +157,7 @@ describe("createThrottle", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockFn, delay));
 
     // First execution
     throttledFn("first");
@@ -188,9 +176,7 @@ describe("createThrottle", () => {
     const mockFn = vi.fn((a: string, b: number) => `${a}-${b}`);
     const delay = 100;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockFn, delay));
 
     // TypeScript should enforce correct argument types
     throttledFn("test", 42);
@@ -204,9 +190,7 @@ describe("createThrottle", () => {
     const mockAsyncFn = vi.fn().mockResolvedValue("result");
     const delay = 100;
 
-    const throttledFn = createRoot(() => {
-      return createThrottle(mockAsyncFn, delay);
-    });
+    const throttledFn = createRoot(() => createThrottle(mockAsyncFn, delay));
 
     throttledFn("test");
     await vi.advanceTimersByTimeAsync(delay);

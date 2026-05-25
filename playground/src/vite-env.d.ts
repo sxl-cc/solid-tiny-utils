@@ -15,6 +15,7 @@ declare module "virtual:route-info" {
 
 declare module "virtual:pages" {
   import type { RouteDefinition } from "@solidjs/router";
+
   const routes: RouteDefinition[];
   export default routes;
 }

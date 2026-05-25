@@ -20,9 +20,9 @@ describe("create intersection observer", () => {
 
   it("should create with element", () => {
     const previousInstanceCount = getAllMockedIOInstances().length;
-    const [isVisible, dispose] = createRoot((d) => {
-      return [createVisibilityObserver(div), d] as const;
-    });
+    const [isVisible, dispose] = createRoot(
+      (d) => [createVisibilityObserver(div), d] as const
+    );
     const newInstanceCount = getAllMockedIOInstances().length;
     expect(previousInstanceCount + 1, "new instance was not created").toBe(
       newInstanceCount
@@ -39,9 +39,9 @@ describe("create intersection observer", () => {
   });
 
   it("should create without element", () => {
-    const [useVisible, dispose] = createRoot((d) => {
-      return [createVisibilityObserver(), d] as const;
-    });
+    const [useVisible, dispose] = createRoot(
+      (d) => [createVisibilityObserver(), d] as const
+    );
     const inst = getLastMockedIOInstance();
     const obElements = inst.elements;
     expect(obElements.length, "no element was observed").toBe(0);
@@ -55,9 +55,9 @@ describe("create intersection observer", () => {
   });
 
   it("should change signal when visible", () => {
-    const [useVisible] = createRoot(() => {
-      return [createVisibilityObserver()] as const;
-    });
+    const [useVisible] = createRoot(
+      () => [createVisibilityObserver()] as const
+    );
     const isVisible = useVisible(div);
     const inst = getLastMockedIOInstance();
     inst.__TEST__callback({ isIntersecting: true });

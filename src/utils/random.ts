@@ -3,9 +3,8 @@ import { iterate } from "./array";
 /**
  * Generates a random number between min and max
  */
-export const random = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
+export const random = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
 
 /**
  * Draw a random item from a list. Returns
@@ -20,20 +19,17 @@ export const draw = <T>(array: readonly T[]): T | null => {
   return array[index];
 };
 
-export const shuffle = <T>(array: readonly T[]): T[] => {
-  return array
+export const shuffle = <T>(array: readonly T[]): T[] =>
+  array
     .map((a) => ({ rand: Math.random(), value: a }))
     .sort((a, b) => a.rand - b.rand)
     .map((a) => a.value);
-};
 
 export const uid = (length: number, specials = "") => {
   const characters = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789${specials}`;
   return iterate(
     length,
-    (acc) => {
-      return acc + characters.charAt(random(0, characters.length - 1));
-    },
+    (acc) => acc + characters.charAt(random(0, characters.length - 1)),
     ""
   );
 };

@@ -12,9 +12,9 @@ export function createClickOutside(
   let shouldListen = false;
   const shouldIgnore = (event: PointerEvent) => {
     const ignore = (options?.ignore ? options.ignore : []).map(access);
-    return ignore.some((el) => {
-      return el && (event.target === el || event.composedPath().includes(el));
-    });
+    return ignore.some(
+      (el) => el && (event.target === el || event.composedPath().includes(el))
+    );
   };
 
   const listener = (e: PointerEvent) => {

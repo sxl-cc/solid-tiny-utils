@@ -16,9 +16,7 @@ describe("createDebounce", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockFn, delay));
 
     // Call the debounced function
     debouncedFn("test");
@@ -40,9 +38,7 @@ describe("createDebounce", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockFn, delay));
 
     // First call
     debouncedFn("first");
@@ -93,9 +89,7 @@ describe("createDebounce", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockFn, delay));
 
     debouncedFn("arg1", "arg2", "arg3");
     await vi.advanceTimersByTimeAsync(delay);
@@ -108,9 +102,7 @@ describe("createDebounce", () => {
     const mockFn = vi.fn();
     const delay = 0;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockFn, delay));
 
     debouncedFn("test");
 
@@ -147,9 +139,7 @@ describe("createDebounce", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockFn, delay));
 
     // Make multiple rapid calls
     debouncedFn("call1");
@@ -172,9 +162,7 @@ describe("createDebounce", () => {
     const mockFn = vi.fn();
     const delay = 100;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockFn, delay));
 
     // First execution
     debouncedFn("first");
@@ -193,9 +181,7 @@ describe("createDebounce", () => {
     const mockFn = vi.fn((a: string, b: number) => `${a}-${b}`);
     const delay = 100;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockFn, delay));
 
     // TypeScript should enforce correct argument types
     debouncedFn("test", 42);
@@ -209,9 +195,7 @@ describe("createDebounce", () => {
     const mockAsyncFn = vi.fn().mockResolvedValue("result");
     const delay = 100;
 
-    const debouncedFn = createRoot(() => {
-      return createDebounce(mockAsyncFn, delay);
-    });
+    const debouncedFn = createRoot(() => createDebounce(mockAsyncFn, delay));
 
     debouncedFn("test");
     await vi.advanceTimersByTimeAsync(delay);

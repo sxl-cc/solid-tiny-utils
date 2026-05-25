@@ -62,9 +62,7 @@ describe("createWatch", () => {
   });
 
   it("should work with memo dependencies", () => {
-    const callback = vi.fn((v) => {
-      return v + 1;
-    });
+    const callback = vi.fn((v) => v + 1);
 
     const setCount = createRoot(() => {
       const [count, s] = createSignal(1);
@@ -85,9 +83,7 @@ describe("createWatch", () => {
   });
 
   it("should handle complex object changes", () => {
-    const callback = vi.fn((v) => {
-      return v.age;
-    });
+    const callback = vi.fn((v) => v.age);
 
     const setUser = createRoot(() => {
       const [user, s] = createStore({ name: "John", age: 30 });

@@ -62,9 +62,7 @@ describe("Type checking utilities", () => {
 
   describe("isFn", () => {
     it("should identify functions", () => {
-      const testFn1 = () => {
-        return "test";
-      };
+      const testFn1 = () => "test";
       const testFn2 = function test() {
         return "test";
       };
@@ -130,9 +128,7 @@ describe("Type checking utilities", () => {
       });
       expect(isPromise(testPromise)).toBe(true);
       // Test thenable objects
-      const thenMethod = () => {
-        return "test";
-      };
+      const thenMethod = () => "test";
       const thenKey = "then";
       const thenLike = {
         [thenKey]: thenMethod,
@@ -159,9 +155,7 @@ describe("Type checking utilities", () => {
       expect(isEmpty("test")).toBe(false);
       expect(isEmpty([1])).toBe(false);
       expect(isEmpty({ key: "value" })).toBe(false);
-      const testFn = () => {
-        return "test";
-      };
+      const testFn = () => "test";
       expect(isEmpty(testFn)).toBe(false);
       expect(isEmpty(Symbol("test"))).toBe(false);
     });

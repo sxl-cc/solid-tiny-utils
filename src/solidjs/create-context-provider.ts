@@ -6,7 +6,7 @@ import {
   useContext,
 } from "solid-js";
 
-export function createStateContext<P extends Record<string, unknown>, V>(
+export function createContextProvider<P extends Record<string, unknown>, V>(
   factory: (props: P) => V
 ) {
   const Ctx = createContext<V>();

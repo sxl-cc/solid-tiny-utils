@@ -43,10 +43,7 @@ function getStore(storage: PersistedStorage, name: string): unknown {
   }
 }
 
-function strictAssignStore<T extends Record<string, unknown>>(
-  init: T,
-  obj: unknown
-) {
+function strictAssignStore<T extends object>(init: T, obj: unknown) {
   const store = { ...init };
 
   if (!isObject(obj)) {
@@ -84,7 +81,7 @@ function strictAssignStore<T extends Record<string, unknown>>(
  * setSettings({ sidebarOpen: false });
  * ```
  */
-export function createPersistedStore<T extends Record<string, unknown>>(
+export function createPersistedStore<T extends object>(
   init: T,
   opts?: PersistedStoreOption
 ) {

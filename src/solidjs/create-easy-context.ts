@@ -7,7 +7,7 @@ import {
 } from "solid-js";
 import { isUndefined } from "~/utils";
 
-export interface EasyContext<V, P extends Record<string, unknown>> {
+export interface EasyContext<V, P extends object> {
   initial: (params: P) => {
     value: V;
     Provider: ParentComponent;
@@ -15,7 +15,7 @@ export interface EasyContext<V, P extends Record<string, unknown>> {
   useContext: () => V;
 }
 
-export function createEasyContext<V, P extends Record<string, unknown>>(
+export function createEasyContext<V, P extends object>(
   factory: (params: P) => V
 ): EasyContext<V, P> {
   const ctx = createContext<V | undefined>();

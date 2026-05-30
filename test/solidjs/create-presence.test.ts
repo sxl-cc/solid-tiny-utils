@@ -23,7 +23,6 @@ describe("createPresence", () => {
       expect(p.isMounted()).toBe(false);
       expect(p.isAnimating()).toBe(false);
       expect(p.isExiting()).toBe(false);
-      expect(p.isVisible()).toBe(false);
       expect(p.isEntering()).toBe(false);
       expect(p.phase()).toBe("idle");
       dispose();
@@ -40,7 +39,6 @@ describe("createPresence", () => {
       expect(p.isMounted()).toBe(true);
       expect(p.isAnimating()).toBe(false);
       expect(p.isExiting()).toBe(false);
-      expect(p.isVisible()).toBe(true);
       expect(p.isEntering()).toBe(false);
       expect(p.phase()).toBe("entered");
       dispose();
@@ -57,16 +55,15 @@ describe("createPresence", () => {
       });
 
       expect(p.isMounted()).toBe(true);
-      expect(p.isAnimating()).toBe(false);
+      expect(p.isAnimating()).toBe(true);
       expect(p.isExiting()).toBe(false);
-      expect(p.isVisible()).toBe(false);
-      expect(p.isEntering()).toBe(false);
-      expect(p.phase()).toBe("pre-enter");
+      expect(p.isEntering()).toBe(true);
+      expect(p.phase()).toBe("entering");
       dispose();
     });
   });
 
-  it("transitions to entering when show changes from false to true", async () => {
+  it("enters when show changes from false to true", async () => {
     await createRoot(async (dispose) => {
       const [show, setShow] = createSignal(false);
       const p = createPresence(show, {
@@ -83,9 +80,35 @@ describe("createPresence", () => {
       await vi.advanceTimersByTimeAsync(500);
       expect(p.isMounted()).toBe(true);
       expect(p.isAnimating()).toBe(false);
-      expect(p.isVisible()).toBe(true);
       expect(p.isEntering()).toBe(false);
       expect(p.phase()).toBe("entered");
+
+      dispose();
+    });
+  });
+
+  it("exits before unmounting when show changes from true to false", async () => {
+    await createRoot(async (dispose) => {
+      const [show, setShow] = createSignal(true);
+      const p = createPresence(show, {
+        enterDuration: 100,
+        exitDuration: 100,
+      });
+
+      setShow(false);
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(p.isMounted()).toBe(true);
+      expect(p.isAnimating()).toBe(true);
+      expect(p.isExiting()).toBe(true);
+      expect(p.phase()).toBe("exiting");
+
+      await vi.advanceTimersByTimeAsync(100);
+
+      expect(p.isMounted()).toBe(false);
+      expect(p.isAnimating()).toBe(false);
+      expect(p.isExiting()).toBe(false);
+      expect(p.phase()).toBe("idle");
 
       dispose();
     });

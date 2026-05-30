@@ -5,13 +5,6 @@ export default function Index() {
   const [visible, setVisible] = createSignal(true);
   const [enterDuration, setEnterDuration] = createSignal(300);
   const [exitDuration, setExitDuration] = createSignal(500);
-  const [transitionOrAnimation, setTransitionOrAnimation] = createSignal<
-    "transition" | "animation"
-  >("transition");
-
-  const isTransition = createMemo(
-    () => transitionOrAnimation() === "transition"
-  );
 
   const item = createMemo(() => (visible() ? ({ id: 1 } as const) : undefined));
 
@@ -33,7 +26,7 @@ export default function Index() {
       return "fadeOut";
     }
 
-    if (["pre-enter", "entering"].includes(presence.phase())) {
+    if (presence.phase() === "entering") {
       return "fadeIn";
     }
   });
@@ -48,18 +41,6 @@ export default function Index() {
             type="button"
           >
             {visible() ? "Hide" : "Show"}
-          </button>
-
-          <button
-            class="b b-solid b-gray-500 px-3 py-1"
-            onClick={() =>
-              setTransitionOrAnimation((prev) =>
-                prev === "transition" ? "animation" : "transition"
-              )
-            }
-            type="button"
-          >
-            switch to {isTransition() ? "animation" : "transition"}
           </button>
 
           <label class="flex items-center gap-2">
@@ -95,9 +76,6 @@ export default function Index() {
               mounted: <b>{presence.isMounted() ? "true" : "false"}</b>
             </div>
             <div>
-              visible: <b>{presence.isVisible() ? "true" : "false"}</b>
-            </div>
-            <div>
               animating: <b>{presence.isAnimating() ? "true" : "false"}</b>
             </div>
             <div>
@@ -125,17 +103,11 @@ export default function Index() {
       `}</style>
       <Show when={presence.isMounted()}>
         <div
-          class="max-w-520px overflow-hidden rounded-md bg-gray-200"
-          classList={{
-            "opacity-0  h-0 mt-0": !presence.isVisible() && isTransition(),
-            "opacity-100  h-80px mt-10px":
-              presence.isVisible() || !isTransition(),
-          }}
+          class="mt-10px h-80px max-w-520px overflow-hidden rounded-md bg-gray-200"
           style={{
-            transition: `opacity ${duration()}ms ease, height ${duration()}ms ease, margin-top ${duration()}ms ease`,
             "animation-duration": `${duration()}ms`,
             "animation-fill-mode": "both",
-            "animation-name": isTransition() ? "none" : animationName(),
+            "animation-name": animationName(),
           }}
         >
           <div class="font-bold">makePresence demo</div>

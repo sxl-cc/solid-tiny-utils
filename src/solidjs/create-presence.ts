@@ -7,7 +7,7 @@ import {
   untrack,
 } from "solid-js";
 import type { MaybeAccessor } from "~/types";
-import { isDefined, noop, runAtNextAnimationFrame } from "~/utils";
+import { isDefined, noop } from "~/utils";
 import { createWatch } from "./create-watch";
 import { access } from "./utils";
 
@@ -17,138 +17,105 @@ export interface MakePresenceOptions {
   initialEnter?: boolean;
 }
 
-export type PresencePhase =
-  | "idle"
-  | "pre-enter"
-  | "entering"
-  | "entered"
-  | "exiting"
-  | "exited";
+export type PresencePhase = "idle" | "entering" | "entered" | "exiting";
 
-function makeTimeout(ms: Accessor<number>, fn: () => void) {
-  if (ms() <= 0) {
+function makeTimeout(ms: number, fn: () => void) {
+  if (ms <= 0) {
     fn();
     return noop;
   }
 
   const timeoutId = setTimeout(() => {
     fn();
-  }, ms());
+  }, ms);
 
   return () => clearTimeout(timeoutId);
-}
-
-/**
- * Animates the appearance of its children.
- *
- * @internal - to be combined with `createPresence` in the future
- */
-function createPresenceBase(
-  /** Indicates whether the component that the resulting values will be used upon should be visible to the user. */
-  source: Accessor<boolean>,
-  options: MakePresenceOptions
-) {
-  const enterDuration = () => access(options.enterDuration);
-  const exitDuration = () => access(options.exitDuration);
-
-  const initialSource = untrack(source);
-
-  let initialPhase = "idle" as PresencePhase;
-  if (initialSource) {
-    initialPhase = options.initialEnter ? "pre-enter" : "entered";
-  }
-
-  const [phase, setPhase] = createSignal<PresencePhase>(initialPhase);
-
-  let clear = noop;
-  onCleanup(clear);
-
-  createWatch(source, (visible) => {
-    setPhase((prev) => {
-      if (visible) {
-        if (prev === "idle" || prev === "exited") {
-          return "pre-enter";
-        }
-        return prev;
-      }
-      if (prev === "entered" || prev === "entering") {
-        return "exiting";
-      }
-      return prev;
-    });
-  });
-
-  createWatch(phase, (currentPhase) => {
-    clear();
-
-    if (currentPhase === "pre-enter") {
-      runAtNextAnimationFrame(() => {
-        // reflow();
-        setPhase("entering");
-      });
-    }
-
-    if (currentPhase === "entering") {
-      clear = makeTimeout(enterDuration, () => setPhase("entered"));
-    }
-
-    if (currentPhase === "exiting") {
-      clear = makeTimeout(exitDuration, () => setPhase("exited"));
-    }
-
-    if (currentPhase === "exited") {
-      setPhase("idle");
-    }
-  });
-
-  const isVisible = createMemo(() => ["entering", "entered"].includes(phase()));
-  const isMounted = createMemo(() => phase() !== "idle");
-  const isExiting = createMemo(() => phase() === "exiting");
-  const isEntering = createMemo(() => phase() === "entering");
-  const isAnimating = createMemo(() => isEntering() || isExiting());
-
-  return {
-    isMounted,
-    isVisible,
-    isAnimating,
-    isEntering,
-    isExiting,
-    phase,
-  };
 }
 
 const itemShouldBeMounted = <TItem>(item: TItem) =>
   item !== false && item != null;
 
+function getInitialPhase<TItem>(
+  item: TItem | undefined,
+  initialEnter?: boolean
+): PresencePhase {
+  if (!itemShouldBeMounted(item)) {
+    return "idle";
+  }
+
+  if (initialEnter) {
+    return "entering";
+  }
+
+  return "entered";
+}
+
+/**
+ * Keeps an item mounted while its enter and exit animations run.
+ */
 export function createPresence<TItem>(
   item: Accessor<TItem | undefined>,
   options: MakePresenceOptions
 ) {
   const initial = untrack(item);
   const [mountedItem, setMountedItem] = createSignal(initial);
-  const [shouldBeMounted, setShouldBeMounted] = createSignal(
-    itemShouldBeMounted(initial)
+  const [phase, setPhase] = createSignal<PresencePhase>(
+    getInitialPhase(initial, options.initialEnter)
   );
-  const { isMounted, ...rest } = createPresenceBase(shouldBeMounted, options);
+
+  const isMounted = createMemo(() => phase() !== "idle");
+  const isEntering = createMemo(() => phase() === "entering");
+  const isExiting = createMemo(() => phase() === "exiting");
+  const isAnimating = createMemo(() => isEntering() || isExiting());
+
+  let clear = noop;
+  onCleanup(clear);
+
+  createWatch(phase, (currentPhase) => {
+    clear();
+
+    if (currentPhase === "entering") {
+      clear = makeTimeout(access(options.enterDuration), () =>
+        setPhase("entered")
+      );
+    }
+
+    if (currentPhase === "exiting") {
+      clear = makeTimeout(access(options.exitDuration), () => setPhase("idle"));
+    }
+  });
 
   createEffect(() => {
-    if (mountedItem() !== item()) {
+    const currentItem = item();
+
+    if (mountedItem() !== currentItem) {
       if (isMounted()) {
-        setShouldBeMounted(false);
-      } else if (itemShouldBeMounted(item())) {
-        setMountedItem(() => item());
-        setShouldBeMounted(true);
+        setPhase("exiting");
+      } else if (itemShouldBeMounted(currentItem)) {
+        setMountedItem(() => currentItem);
+        setPhase("entering");
       }
-    } else if (!itemShouldBeMounted(item())) {
-      setShouldBeMounted(false);
-    } else if (itemShouldBeMounted(item())) {
-      setShouldBeMounted(true);
+      return;
+    }
+
+    if (itemShouldBeMounted(currentItem)) {
+      if (!isMounted()) {
+        setPhase("entering");
+      }
+      return;
+    }
+
+    if (isMounted()) {
+      setPhase("exiting");
     }
   });
 
   return {
-    ...rest,
     isMounted: () => isMounted() && isDefined(mountedItem()),
+    isAnimating,
+    isEntering,
+    isExiting,
     mountedItem,
+    phase,
   };
 }

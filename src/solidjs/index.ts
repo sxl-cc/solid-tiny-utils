@@ -1,3 +1,4 @@
+export * from "./assign-accessors";
 export * from "./create-click-outside";
 export * from "./create-context-provider";
 export * from "./create-debounce";

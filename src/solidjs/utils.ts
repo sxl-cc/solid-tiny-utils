@@ -33,10 +33,10 @@ export function runSolidEventHandler<
   }
 }
 
-export type MaybeCallableChild<T extends unknown[] = []> =
+export type MaybeCallableChild<T extends readonly unknown[] = []> =
   | JSX.Element
   | ((...args: T) => JSX.Element);
-export function callMaybeCallableChild<T extends unknown[] = []>(
+export function callMaybeCallableChild<T extends readonly unknown[] = []>(
   children: MaybeCallableChild<T>,
   ...args: T
 ) {

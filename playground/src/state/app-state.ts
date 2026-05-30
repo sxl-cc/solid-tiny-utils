@@ -1,12 +1,12 @@
-import { defineGlobalStore } from "solid-tiny-context";
+import { createRoot } from "solid-js";
+import { createStaticStore } from "~/solidjs";
 
-const appState = defineGlobalStore("app-state", {
-  state: () => ({
+const appState = createRoot(() =>
+  createStaticStore({
     isDark: false,
     hue: 165,
-  }),
-  persist: "localStorage",
-});
+  })
+);
 
 export function useAppState() {
   return appState;

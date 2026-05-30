@@ -9,7 +9,8 @@
     "rules": {
       "style": {
         "useAtIndex": "off",
-        "noMagicNumbers": "off"
+        "noMagicNumbers": "off",
+        "useUnifiedTypeSignatures": "off"
       },
       "correctness": {
         "useHookAtTopLevel": "off"

@@ -18,7 +18,7 @@ export default defineConfig({
     port: 5010,
   },
   plugins: [
-    UnoCSS(),
+    UnoCSS(path.resolve(import.meta.dirname, "./uno.config.ts")),
     solidPlugin(),
     solidPagesPlugin({
       dir: "./playground/src/pages",

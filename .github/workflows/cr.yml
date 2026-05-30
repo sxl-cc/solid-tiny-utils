@@ -1,0 +1,40 @@
+name: ⚡️ Continuous Releases
+
+on:
+  workflow_dispatch:
+  merge_group:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  cr:
+    name: "⚡️ Continuous Releases"
+
+    strategy:
+      fail-fast: false
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: "https://registry.npmjs.org"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Packages
+        run: |
+          pnpm run build
+
+      - name: Release Packages
+        run: |
+          pnpm dlx pkg-pr-new publish --pnpm
